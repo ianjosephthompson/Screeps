@@ -1,11 +1,11 @@
-const WORKER = 'worker';
-const UPGRADER = 'upgrader';
-const BUILDER = 'builder';
-const REPAIRER = 'repairer';
+
+const ROLES = {
+  WORKER: 'worker',
+  UPGRADER: 'upgrader',
+  BUILDER: 'builder',
+  REPAIRER: 'repairer'
+}
 
 module.exports = {
-  WORKER: WORKER,
-  UPGRADER: UPGRADER,
-  BUILDER: BUILDER,
-  REPAIRER: REPAIRER
+  ROLES: ROLES
 };

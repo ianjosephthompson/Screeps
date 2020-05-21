@@ -3,6 +3,8 @@ const roles = require('roles');
 const work = require('work');
 const spawner = require('spawner');
 
+const ROLES = roles.ROLES;
+
 // // Any modules that modify the game's prototypes should be required before the profiler.
 // const profiler = require('screeps-profiler');
 // profiler.enable();
@@ -24,9 +26,9 @@ let numBuilderCreeps;
 module.exports.loop = function () {
   spawn = Game.spawns['CreepFactory'];
   numCreeps = _.sum(Game.creeps, () => true);
-  numWorkerCreeps = _.sum(Game.creeps, (creep) => creep.memory.role === roles.WORKER);
-  numUpgraderCreeps = _.sum(Game.creeps, (creep) => creep.memory.role === roles.UPGRADER);
-  numBuilderCreeps = _.sum(Game.creeps, (creep) => creep.memory.role === roles.BUILDER);
+  numWorkerCreeps = _.sum(Game.creeps, (creep) => creep.memory.role === ROLES.WORKER);
+  numUpgraderCreeps = _.sum(Game.creeps, (creep) => creep.memory.role === ROLES.UPGRADER);
+  numBuilderCreeps = _.sum(Game.creeps, (creep) => creep.memory.role === ROLES.BUILDER);
   numCreepsBlockedLastTick = _.sum(Game.creeps, (creep) => creep.memory.blockedLastTick === true);
 
   garbageCollect();

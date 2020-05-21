@@ -1,12 +1,14 @@
-const SPAWNING = 'spawning';
-const COLLECTING = 'collecting';
-const PICKINGUP = 'pickingup';
-const STORING = 'storing';
-const UPGRADING = 'upgrading';
-const BUILDING = 'building';
-const REPAIRING = 'repairing';
+const TASKS = {
+  SPAWNING: 'spawning',
+  COLLECTING: 'collecting',
+  PICKINGUP: 'pickingup',
+  STORING: 'storing',
+  UPGRADING: 'upgrading',
+  BUILDING: 'building',
+  REPAIRING: 'repairing'
+};
 
-const MAX_WALL_REPAIR_LEVEL = 10000;
+const MAX_WALL_REPAIR_LEVEL = 1000;
 
 function goTravel(creep, destination, color) {
   let tryMove = creep.moveTo(destination, { visualizePathStyle: { stroke: color } });
@@ -63,7 +65,7 @@ function goCollectEnergy(creep) {
   let source;
 
   //  set task
-  creep.memory.task.task = COLLECTING;
+  creep.memory.task.task = TASKS.COLLECTING;
 
   //  if previously collecting
   if (task.collectionTarget) {
@@ -156,7 +158,7 @@ function goCollectEnergy(creep) {
 function goPickupDroppedResources(creep) {
   //  set task
   creep.memory.task = {
-    task: PICKINGUP
+    task: TASKS.PICKINGUP
   };
 
   let pickup = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES);
@@ -229,7 +231,7 @@ function goStoreEnergyInExtension(creep) {
   let storage;
 
   //  set task
-  creep.memory.task.task = STORING;
+  creep.memory.task.task = TASKS.STORING;
 
   //  if previously storing
   if (storageTarget !== undefined && storageTarget !== null) {
@@ -331,7 +333,7 @@ function goStoreEnergyInSpawner(creep) {
   let storage = spawn;
 
   //  set task
-  creep.memory.task.task = STORING;
+  creep.memory.task.task = TASKS.STORING;
 
   //  remember target
   creep.memory.task.storageTarget = storageTarget = storage.id;
@@ -384,7 +386,7 @@ function goStoreEnergyInSpawner(creep) {
 function goUpgradeController(creep) {
   //  set task
   creep.memory.task = {
-    task: UPGRADING
+    task: TASKS.UPGRADING
   };
 
   const controller = creep.room.controller;
@@ -433,7 +435,7 @@ function goUpgradeController(creep) {
 function goBuild(creep) {
   //  set task
   creep.memory.task = {
-    task: BUILDING
+    task: TASKS.BUILDING
   };
 
   const constructionSite = creep.pos.findClosestByPath(FIND_MY_CONSTRUCTION_SITES);
@@ -488,13 +490,16 @@ function goRepair(creep) {
 }
 
 function goRepairRoadsThenWalls(creep, repairWalls) {
+  let type;
+
   //  set task
   creep.memory.task = {
-    task: REPAIRING
+    task: TASKS.REPAIRING
   };
 
   let repairSite;
   if (repairWalls) {
+    type = '🧱';
     repairSite = creep.pos.findClosestByPath(FIND_STRUCTURES, {
       filter: (structure) => {
         return structure.hits < MAX_WALL_REPAIR_LEVEL
@@ -506,6 +511,7 @@ function goRepairRoadsThenWalls(creep, repairWalls) {
     }
   }
   else {
+    type = '🛣️';
     repairSite = creep.pos.findClosestByPath(FIND_STRUCTURES, {
       filter: (structure) => {
         const structureType = structure.structureType;
@@ -522,9 +528,8 @@ function goRepairRoadsThenWalls(creep, repairWalls) {
           hitsRatio = hits / hitsMax;
 
           readyToRepair = (
-            (hitsMax <= 1000 && hitsRatio < .9) ||    //  Wait for <= 1k hits to reach 90% before repairing
-            (hitsMax <= 10000 && hitsRatio < .5) ||   //  Wait for <= 10k hits to reach 50% before repairing
-            hits < 10000                              //  Only repair > 10k hits up to 10k hits
+            (hitsMax <= 1000 && hitsRatio < .9) ||  //  Wait for structures with less than 1k hits to reach 90% before repairing
+            (hitsMax > 1000 && hits < 1000)         //  Only repair up to 1k hits
           );
         }
 
@@ -539,7 +544,7 @@ function goRepairRoadsThenWalls(creep, repairWalls) {
 
   const tryRepair = creep.repair(repairSite);
   if (tryRepair === OK) {
-    creep.say('🔧');
+    creep.say('🔧' + type);
   }
   else {
     let errorString;
@@ -582,7 +587,7 @@ function goRepairRoadsThenWalls(creep, repairWalls) {
 function goRepairStructures(creep) {
   //  set task
   creep.memory.task = {
-    task: REPAIRING
+    task: TASKS.REPAIRING
   };
 
   let repairSite = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
@@ -602,7 +607,7 @@ function goRepairStructures(creep) {
 
   const tryRepair = creep.repair(repairSite);
   if (tryRepair === OK) {
-    creep.say('🔧');
+    creep.say('🔧🏦');
   }
   else {
     let errorString;
@@ -643,13 +648,7 @@ function goRepairStructures(creep) {
 }
 
 module.exports = {
-  SPAWNING: SPAWNING,
-  COLLECTING: COLLECTING,
-  PICKINGUP: PICKINGUP,
-  STORING: STORING,
-  UPGRADING: UPGRADING,
-  BUILDING: BUILDING,
-  REPAIRING: REPAIRING,
+  TASKS: TASKS,
   goTravel: goTravel,
   goCollectEnergy: goCollectEnergy,
   goPickupDroppedResources: goPickupDroppedResources,

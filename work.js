@@ -1,6 +1,9 @@
 const roles = require('roles');
 const tasks = require('tasks');
 
+const ROLES = roles.ROLES;
+const TASKS = tasks.TASKS;
+
 function work(creep) {
   //  reset
   creep.memory.blockedLastTick = false;
@@ -8,7 +11,7 @@ function work(creep) {
   //  safety
   if (creep.memory.task === undefined || creep.memory.task.task === undefined) {
     creep.memory.task = {
-      task: tasks.COLLECTING
+      task: TASKS.COLLECTING
     };
   }
 
@@ -22,7 +25,7 @@ function work(creep) {
 
     //  if empty
     if (creep.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
-      if (role === roles.WORKER) {
+      if (role === ROLES.WORKER) {
         tasks.goPickupDroppedResources(creep);
       }
       else {
@@ -32,51 +35,51 @@ function work(creep) {
     //  if full
     else if (creep.store.getFreeCapacity(RESOURCE_ENERGY) === 0) {
       //  if creep was collecting or pickingup last tick
-      if (task === tasks.COLLECTING || task === tasks.PICKINGUP) {
+      if (task === TASKS.COLLECTING || task === TASKS.PICKINGUP) {
         //  assign emptying task according to role
-        if (role === roles.WORKER) {
+        if (role === ROLES.WORKER) {
           tasks.goStoreEnergy(creep);
         }
-        else if (role === roles.UPGRADER) {
+        else if (role === ROLES.UPGRADER) {
           tasks.goUpgradeController(creep);
         }
-        else if (role === roles.BUILDER) {
+        else if (role === ROLES.BUILDER) {
           tasks.goBuild(creep);
         }
       }
       //  otherwise continue with previous task
-      else if (task === tasks.STORING) {
+      else if (task === TASKS.STORING) {
         tasks.goStoreEnergy(creep);
       }
-      else if (task === tasks.UPGRADING) {
+      else if (task === TASKS.UPGRADING) {
         tasks.goUpgradeController(creep);
       }
-      else if (task === tasks.BUILDING || task === tasks.REPAIRING) {
+      else if (task === TASKS.BUILDING || task === TASKS.REPAIRING) {
         tasks.goBuild(creep);
       }
     }
     //  if partially-full
     else {
       //  continue with previous task
-      if (task === tasks.STORING) {
+      if (task === TASKS.STORING) {
         tasks.goStoreEnergy(creep);
       }
-      else if (task === tasks.UPGRADING) {
+      else if (task === TASKS.UPGRADING) {
         tasks.goUpgradeController(creep);
       }
-      else if (task === tasks.BUILDING || task === tasks.REPAIRING) {
+      else if (task === TASKS.BUILDING || task === TASKS.REPAIRING) {
         tasks.goBuild(creep);
       }
       else {
-        if (task === tasks.COLLECTING) {
+        if (task === TASKS.COLLECTING) {
           tasks.goCollectEnergy(creep);
         }
-        else if (task === tasks.PICKINGUP) {
+        else if (task === TASKS.PICKINGUP) {
           tasks.goPickupDroppedResources(creep);
         }
         else {
           //  collect according to role
-          if (role === roles.WORKER) {
+          if (role === ROLES.WORKER) {
             tasks.goPickupDroppedResources(creep);
           }
           else {
