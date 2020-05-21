@@ -6,6 +6,8 @@ const UPGRADING = 'upgrading';
 const BUILDING = 'building';
 const REPAIRING = 'repairing';
 
+const MAX_WALL_REPAIR_LEVEL = 10000;
+
 function goTravel(creep, destination, color) {
   let tryMove = creep.moveTo(destination, { visualizePathStyle: { stroke: color } });
 
@@ -17,15 +19,14 @@ function goTravel(creep, destination, color) {
       case ERR_TIRED: {
         break;
       }
+      case ERR_NO_PATH: {
+        creep.memory.blockedLastTick = true;
+        break;
+      }
 
       //  Uncommon errors
       case ERR_NOT_OWNER: {
         errorString = 'ERR_NOT_OWNER';
-        break;
-      }
-      case ERR_NO_PATH: {
-        errorString = 'ERR_NO_PATH';
-        creep.memory.blockedLastTick = true;
         break;
       }
       case ERR_BUSY: {
@@ -52,7 +53,7 @@ function goTravel(creep, destination, color) {
     }
 
     if (errorString) {
-      console.log('ERROR: Creep ' + creep.name + ' tried to goTravel() to ' + destination.pos.toString() + ', but ' + errorString);
+      console.log('ERROR: Creep ' + creep.name + ' tried to goTravel() to ' + destination.pos + ', but ' + errorString);
     }
   }
 }
@@ -93,7 +94,7 @@ function goCollectEnergy(creep) {
 
   const tryCollectEnergy = creep.harvest(source);
   if (tryCollectEnergy === OK) {
-    creep.say('Collect');
+    creep.say('⛏️');
   }
   else {
     let errorString;
@@ -166,7 +167,7 @@ function goPickupDroppedResources(creep) {
 
   const tryPickup = creep.pickup(pickup);
   if (tryPickup === OK) {
-    creep.say('Pickup');
+    creep.say('🗑️');
   }
   else {
     let errorString;
@@ -266,7 +267,7 @@ function goStoreEnergyInExtension(creep) {
 
   const tryStoreEnergy = creep.transfer(storage, RESOURCE_ENERGY);
   if (tryStoreEnergy === OK) {
-    creep.say('Store');
+    creep.say('☀️');
   }
   else {
     let errorString;
@@ -337,7 +338,7 @@ function goStoreEnergyInSpawner(creep) {
 
   const tryStoreEnergy = creep.transfer(storage, RESOURCE_ENERGY);
   if (tryStoreEnergy === OK) {
-    creep.say('Store');
+    creep.say('☀️');
   }
   else {
     let errorString;
@@ -389,7 +390,7 @@ function goUpgradeController(creep) {
   const controller = creep.room.controller;
   const tryUpgradeController = creep.upgradeController(controller);
   if (tryUpgradeController === OK) {
-    creep.say('Upgrade');
+    creep.say('⚡');
   }
   else {
     let errorString;
@@ -442,7 +443,7 @@ function goBuild(creep) {
 
   const tryBuild = creep.build(constructionSite);
   if (tryBuild === OK) {
-    creep.say('Build');
+    creep.say('👷');
   }
   else {
     let errorString;
@@ -496,7 +497,7 @@ function goRepairRoadsThenWalls(creep, repairWalls) {
   if (repairWalls) {
     repairSite = creep.pos.findClosestByPath(FIND_STRUCTURES, {
       filter: (structure) => {
-        return structure.hits < structure.hitsMax
+        return structure.hits < MAX_WALL_REPAIR_LEVEL
       }
     });
 
@@ -507,7 +508,27 @@ function goRepairRoadsThenWalls(creep, repairWalls) {
   else {
     repairSite = creep.pos.findClosestByPath(FIND_STRUCTURES, {
       filter: (structure) => {
-        return structure.hits < structure.hitsMax && structure.structureType !== STRUCTURE_WALL
+        const structureType = structure.structureType;
+        const hitsMax = structure.hitsMax;
+        const hits = structure.hits;
+        let hitsRatio;
+        let readyToRepair = false;
+
+        if (
+          structureType !== STRUCTURE_WALL &&
+          structureType !== STRUCTURE_RAMPART &&
+          hitsMax > 0
+        ) {
+          hitsRatio = hits / hitsMax;
+
+          readyToRepair = (
+            (hitsMax <= 1000 && hitsRatio < .9) ||    //  Wait for <= 1k hits to reach 90% before repairing
+            (hitsMax <= 10000 && hitsRatio < .5) ||   //  Wait for <= 10k hits to reach 50% before repairing
+            hits < 10000                              //  Only repair > 10k hits up to 10k hits
+          );
+        }
+
+        return readyToRepair
       }
     });
 
@@ -518,7 +539,7 @@ function goRepairRoadsThenWalls(creep, repairWalls) {
 
   const tryRepair = creep.repair(repairSite);
   if (tryRepair === OK) {
-    creep.say('Repair');
+    creep.say('🔧');
   }
   else {
     let errorString;
@@ -566,7 +587,12 @@ function goRepairStructures(creep) {
 
   let repairSite = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
     filter: (structure) => {
-      return structure.hits < structure.hitsMax
+      let structureType = structure.structureType;
+      return (
+        structure.hits < structure.hitsMax &&
+        structureType !== STRUCTURE_WALL &&
+        structureType !== STRUCTURE_RAMPART
+      );
     }
   });
 
@@ -576,7 +602,7 @@ function goRepairStructures(creep) {
 
   const tryRepair = creep.repair(repairSite);
   if (tryRepair === OK) {
-    creep.say('Repair');
+    creep.say('🔧');
   }
   else {
     let errorString;

@@ -26,6 +26,9 @@ https://docs.screeps.com/
 API
 https://docs.screeps.com/api/
 
+Emoji
+https://emojipedia.org/
+
 
 
 Dev Tools
