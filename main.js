@@ -1,3 +1,5 @@
+//  Copyright © 2020 Ian Joseph Thompson
+
 //  Modules
 const roles = require('roles');
 const work = require('work');

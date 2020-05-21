@@ -1,3 +1,5 @@
+//  Copyright © 2020 Ian Joseph Thompson
+
 const TASKS = {
   SPAWNING: 'spawning',
   COLLECTING: 'collecting',

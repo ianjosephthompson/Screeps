@@ -1,3 +1,4 @@
+//  Copyright © 2020 Ian Joseph Thompson
 
 const ROLES = {
   WORKER: 'worker',

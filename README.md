@@ -100,3 +100,24 @@ Setup Visual Studio: Code for Screeps Development
   * Create a ".gitignore" file to make sure you don't commit the /ScreepsAutocomplete/ or /node_modules/ folders
     * But node recommends that you DO commit the "package-lock.json" file
   * Commit your ".gitignore" file and the "package-lock.json" file
+
+
+Copyright
+
+The git repository and/or scripts directory in which you find this file is a copyrighted Work under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License.
+
+A copy of the license can be found in the copyright.license textfile, or online at https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
+
+In brief:
+  * The Copyright License allows anyone, anywhere to share, copy, and redistribute the Work in any medium or format and to adapt, remix, transform, and build upon the Material infinitely and forever;
+  * so long as they
+    * distribute their modified Work under the same licenses as the original,
+    * do not use the material for commercial purposes,
+    * give appropriate credit to the original author and all other contributors,
+    * indicate if and what changes were made,
+    * provide a link to the Copyright License, and
+    * do not apply additional legal restrictions or prevent others from following the Copyright License.
+  * At anytime the Copyright Holder may cease distribution of the Work, add to or alter the current terms and conditions, or distribute the Material under a different set of terms and conditions.
+    * However, doing so does not terminate the Public License outlined here.
+
+Copyright © 2020 Ian Joseph Thompson

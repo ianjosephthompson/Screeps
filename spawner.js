@@ -1,3 +1,5 @@
+//  Copyright © 2020 Ian Joseph Thompson
+
 const roles = require('roles');
 const tasks = require('tasks');
 
