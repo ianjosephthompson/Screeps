@@ -120,4 +120,6 @@ In brief:
   * At anytime the Copyright Holder may cease distribution of the Work, add to or alter the current terms and conditions, or distribute the Material under a different set of terms and conditions.
     * However, doing so does not terminate the Public License outlined here.
 
+You can learn more at: https://creativecommons.org/ and https://creativecommons.org/licenses/by-nc-sa/4.0/
+
 Copyright © 2020 Ian Joseph Thompson

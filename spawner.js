@@ -102,13 +102,16 @@ function doSpawnCreep(spawn, role, type) {
   switch (role) {
     case ROLES.BUILDER: {
       rolePrefix = 'Builder-';
+      break;
     }
     case ROLES.UPGRADER: {
       rolePrefix = 'Upgrader-';
+      break;
     }
     case ROLES.WORKER:
     default: {
       rolePrefix = 'Worker-';
+      break;
     }
   }
 
@@ -117,7 +120,7 @@ function doSpawnCreep(spawn, role, type) {
 
 function trySpawnCreep(spawn, namePrefix, parts, memory, index) {
   const name = namePrefix + index;
-  const trySpawn = spawn.spawnCreep(parts, name + index, {
+  const trySpawn = spawn.spawnCreep(parts, name, {
     memory: memory
   });
 
