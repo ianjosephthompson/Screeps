@@ -43,29 +43,29 @@ function spawnCreep(options) {
 
   //  Maintain a few cheap creeps if population drops
   if (numWorkerCreeps < SPAWN_LIMITS.CHEAP_WORKER && energyAvailable >= PARTS_COST.CHEAP) {
-    doSpawnCreep(spawn, ROLES.WORKER, PARTS.CHEAP);
+    doSpawnCreep(spawn, ROLES.WORKER, CREEP_TYPES.CHEAP);
   }
   else if (numUpgraderCreeps < SPAWN_LIMITS.CHEAP_UPGRADER && energyAvailable >= PARTS_COST.CHEAP) {
-    doSpawnCreep(spawn, ROLES.UPGRADER, PARTS.CHEAP);
+    doSpawnCreep(spawn, ROLES.UPGRADER, CREEP_TYPES.CHEAP);
   }
   else if (numBuilderCreeps < SPAWN_LIMITS.CHEAP_BUILDER && energyAvailable >= PARTS_COST.CHEAP) {
-    doSpawnCreep(spawn, ROLES.BUILDER, PARTS.CHEAP);
+    doSpawnCreep(spawn, ROLES.BUILDER, CREEP_TYPES.CHEAP);
   }
 
   //  Otherwise build good creeps up to SPAWN_LIMITS
   else if (numWorkerCreeps < SPAWN_LIMITS.DEFAULT_WORKER && energyAvailable >= PARTS_COST.DEFAULT) {
-    doSpawnCreep(spawn, ROLES.WORKER, PARTS.DEFAULT);
+    doSpawnCreep(spawn, ROLES.WORKER, CREEP_TYPES.DEFAULT);
   }
   else if (numBuilderCreeps < SPAWN_LIMITS.DEFAULT_BUILDER && energyAvailable >= PARTS_COST.DEFAULT) {
-    doSpawnCreep(spawn, ROLES.BUILDER, PARTS.DEFAULT);
+    doSpawnCreep(spawn, ROLES.BUILDER, CREEP_TYPES.DEFAULT);
   }
   else if (numUpgraderCreeps < SPAWN_LIMITS.DEFAULT_UPGRADER && energyAvailable >= PARTS_COST.DEFAULT) {
-    doSpawnCreep(spawn, ROLES.UPGRADER, PARTS.DEFAULT);
+    doSpawnCreep(spawn, ROLES.UPGRADER, CREEP_TYPES.DEFAULT);
   }
 
   //  Then spawn advanced workers
   else if (energyAvailable >= PARTS_COST.ADVANCED) {
-    doSpawnCreep(spawn, ROLES.WORKER, PARTS.ADVANCED);
+    doSpawnCreep(spawn, ROLES.WORKER, CREEP_TYPES.ADVANCED);
   }
 }
 
