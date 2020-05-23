@@ -1,16 +1,16 @@
-Screeps
+# Screeps
 
 Screeps ss an open-source game for programmers, wherein the core mechanic is programming your units' AI.  You control your colony by writing JavaScript.  Screeps stands for Scripting Creeps.
 
-Official website
+### Official website
 https://screeps.com/
 
-Official blog
+### Official blog
 https://blog.screeps.com/
 
 
 
-Tutorials
+## Tutorials
 
 https://github.com/screeps/tutorial-scripts
 
@@ -18,53 +18,63 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=712286113
 
 
 
-Documentation
+## Documentation
 
-Game mechanics and system overviews
+### Game mechanics and system overviews
 https://docs.screeps.com/
 
-API
+### API
 https://docs.screeps.com/api/
 
-Emoji
+### Emoji
 https://emojipedia.org/
 
 
 
-Dev Tools
+## Dev Tools
 
-Recommend Visual Studio: Code as an IDE
+### Recommend Visual Studio: Code as an IDE
 https://code.visualstudio.com/
 
-Screeps Intellisense package
+### Screeps Intellisense package
 https://github.com/Garethp/ScreepsAutocomplete
 
-Screeps code references file
+### Screeps code references file
 https://gist.github.com/quonic/d7a7d385c85846027a7ca3dd03a0e985
 
-Screeps performance profiler
+### Screeps performance profiler
 https://www.npmjs.com/package/screeps-profiler
 
+### Screeps Notify
+https://github.com/screepers/screeps_notify
+
+### Screeps in Discord
+
+You'll have to read between the lines and piece it together from these two links
+
+https://www.digitaltrends.com/gaming/how-to-make-a-discord-bot/
+https://github.com/danielheyman/screeps-discord
 
 
-Getting Started With Screeps
+
+## Getting Started With Screeps
 
   * Launch the Screeps game
   * Play the tutorial to generate some default scripts you can learn from and copy!
   * Log into the main server, select your first room, and place your first spawner
   * Now, you can find your local scripts folder by clicking "Open local folder" in the bottom-left
-    * For me on Windows10 this was: <My Drive>:\<My Windows Installation>\Users\<<My User>\AppData\Local\Screeps\scripts\screeps.com\default\
+    * For me on Windows10 this was: <My Drive>:\<My Windows Installation>\Users\<<My User>\AppData\Local\Screeps\scripts\screeps<span>.</span>com\default\
     * You'll notice that if you navigate up one level to the /screeps.com/ folder, that your tutorial scripts have been saved in other folders at this location
     * That's because you were running the tutorials in sandbox environments, and now the scripts that you place in your /default/ folder will run on the main server
 
 
-Integrating Git
+## Integrating Git
 
   * After you've been playing for awhile, maybe you realize it would be nice to have some source control!
   * From GitHub (or elsewhere) setup a new repository
   * From a terminal:
     * cd /to/your/screeps.com/ folder
-      * For me on Windows10 this was: <My Drive>:\<My Windows Installation>\Users\<<My User>\AppData\Local\Screeps\scripts\screeps.com\
+      * For me on Windows10 this was: <My Drive>:\<My Windows Installation>\Users\<<My User>\AppData\Local\Screeps\scripts\screeps<span>.</span>com\
     * Clone your new repository here and name it something descriptive like "screeps-git"
   * Now copy all your scripts from the /default/ folder into your cloned repository
   * Commit, push your changes, and verify they are on the git server
@@ -73,7 +83,7 @@ Integrating Git
     * And clone a new copy of your repository, but named as /default/
 
 
-Setup Visual Studio: Code for Screeps Development
+## Setup Visual Studio: Code for Screeps Development
 
   * Install Visual Studio: Code
     * In the Extensions menu (Ctrl + Shift + X):
@@ -81,7 +91,7 @@ Setup Visual Studio: Code for Screeps Development
   * Launch the Screeps game and play the tutorial
     * Select your first room and place your spawner
     * Now, find your local scripts folder by clicking "Open local folder" in the bottom-left
-      * For me on Windows10 this was: <My Drive>:\<My Windows Installation>\Users\<<My User>\AppData\Local\Screeps\scripts\screeps.com\default\
+      * For me on Windows10 this was: <My Drive>:\<My Windows Installation>\Users\<<My User>\AppData\Local\Screeps\scripts\screeps<span>.</span>com\default\
   * From a terminal window:
       * cd /to/that/local/folder
       * git clone the Screeps Intellisense package as /ScreepsAutocomplete/ into that folder
@@ -102,7 +112,7 @@ Setup Visual Studio: Code for Screeps Development
   * Commit your ".gitignore" file and the "package-lock.json" file
 
 
-Copyright
+### Copyright
 
 The git repository and/or scripts directory in which you find this file is a copyrighted Work under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License.
 
