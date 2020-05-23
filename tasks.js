@@ -95,7 +95,7 @@ function goCollectEnergy(creep) {
     //  no active sources to collect energy from
     creep.memory.task.collectionTarget = undefined;
     creep.memory.blockedLastTick = true;
-    return goPickupDroppedResources(creep, true);
+    return goPickupDroppedResources(creep);
   }
 
   const tryCollectEnergy = creep.harvest(source);
@@ -118,7 +118,7 @@ function goCollectEnergy(creep) {
         }
 
         creep.memory.blockedLastTick = true;
-        break;
+        return goPickupDroppedResources(creep);
       }
       case ERR_NOT_IN_RANGE: {
         return goTravel(creep, source, '#C0D461');
@@ -158,7 +158,7 @@ function goCollectEnergy(creep) {
   }
 };
 
-function goPickupDroppedResources(creep, forceStore) {
+function goPickupDroppedResources(creep) {
   //  set task
   creep.memory.task = {
     task: TASKS.PICKINGUP
@@ -166,13 +166,7 @@ function goPickupDroppedResources(creep, forceStore) {
 
   let pickup = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES);
   if (pickup === undefined || pickup === null) {
-    if (forceStore) {
-      return goStoreEnergy(creep);
-    }
-    else {
-      //  no dropped resources
-      return goCollectEnergy(creep);
-    }
+    return goStoreEnergy(creep);
   }
 
   const tryPickup = creep.pickup(pickup);
@@ -289,7 +283,8 @@ function goStoreEnergyInExtension(creep) {
     switch (tryStoreEnergy) {
       //  Actionable errors
       case ERR_NOT_ENOUGH_RESOURCES: {
-        return goCollectEnergy(creep);
+        //  emptied, choose new task next tick
+        return;
       }
       case ERR_FULL: {
         let extensions = creep.room.find(FIND_MY_STRUCTURES, {
@@ -363,7 +358,8 @@ function goStoreEnergyInSpawner(creep) {
     switch (tryStoreEnergy) {
       //  Actionable errors
       case ERR_NOT_ENOUGH_RESOURCES: {
-        return goCollectEnergy(creep);
+        //  emptied, choose new task next tick
+        return;
       }
       case ERR_FULL: {
         return goUpgradeController(creep);
