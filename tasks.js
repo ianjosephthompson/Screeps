@@ -95,7 +95,7 @@ function goCollectEnergy(creep) {
     //  no active sources to collect energy from
     creep.memory.task.collectionTarget = undefined;
     creep.memory.blockedLastTick = true;
-    return;
+    return goPickupDroppedResources(creep, true);
   }
 
   const tryCollectEnergy = creep.harvest(source);
@@ -121,8 +121,7 @@ function goCollectEnergy(creep) {
         break;
       }
       case ERR_NOT_IN_RANGE: {
-        goTravel(creep, source, '#C0D461');
-        break;
+        return goTravel(creep, source, '#C0D461');
       }
 
       //  Uncommon errors
@@ -159,7 +158,7 @@ function goCollectEnergy(creep) {
   }
 };
 
-function goPickupDroppedResources(creep) {
+function goPickupDroppedResources(creep, forceStore) {
   //  set task
   creep.memory.task = {
     task: TASKS.PICKINGUP
@@ -167,8 +166,13 @@ function goPickupDroppedResources(creep) {
 
   let pickup = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES);
   if (pickup === undefined || pickup === null) {
-    //  no dropped resources
-    return goCollectEnergy(creep);
+    if (forceStore) {
+      return goStoreEnergy(creep);
+    }
+    else {
+      //  no dropped resources
+      return goCollectEnergy(creep);
+    }
   }
 
   const tryPickup = creep.pickup(pickup);
@@ -181,12 +185,10 @@ function goPickupDroppedResources(creep) {
     switch (tryPickup) {
       //  Actionable errors
       case ERR_FULL: {
-        goCollectEnergy();
-        break;
+        return goStoreEnergy(creep);
       }
       case ERR_NOT_IN_RANGE: {
-        goTravel(creep, pickup, '#C0D461');
-        break;
+        return goTravel(creep, pickup, '#C0D461');
       }
 
       //  Uncommon errors
@@ -527,16 +529,10 @@ function goRepairRoadsThenWalls(creep, repairWalls) {
   if (repairWalls) {
     type = '🧱';
     repairSite = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-      filter: (structure) => {
-        return (
-          structure.hitsMax > 0 &&            //  is repairable
-          structure.hits < MAX_REPAIR_LEVEL   //  isn't above set repair level
-        );
-      }
+      filter: filterRepairableWalls
     });
 
     if (repairSite === undefined || repairSite === null) {
-      console.log('no wall repair sites');
       return goUpgradeController(creep);
     }
   }
@@ -547,7 +543,6 @@ function goRepairRoadsThenWalls(creep, repairWalls) {
     });
 
     if (repairSite === undefined || repairSite === null) {
-      console.log('no road repair sites');
       return goRepairRoadsThenWalls(creep, true);
     }
   }
@@ -660,6 +655,27 @@ function filterRepairableStructures(structure) {
   if (
     structureType !== STRUCTURE_WALL &&
     structureType !== STRUCTURE_RAMPART &&
+    hitsMax > 0                             //  is repairable
+  ) {
+    hitsRatio = hits / hitsMax;
+
+    readyToRepair = (
+      (hitsMax <= MAX_REPAIR_LEVEL && hitsRatio < .9) ||
+      (hitsMax > MAX_REPAIR_LEVEL && hits < MAX_REPAIR_LEVEL)
+    );
+  }
+
+  return readyToRepair;
+}
+function filterRepairableWalls(structure) {
+  const structureType = structure.structureType;
+  const hitsMax = structure.hitsMax;
+  const hits = structure.hits;
+  let hitsRatio;
+  let readyToRepair = false;
+
+  if (
+    (structureType === STRUCTURE_WALL || structureType === STRUCTURE_RAMPART) &&
     hitsMax > 0                             //  is repairable
   ) {
     hitsRatio = hits / hitsMax;
