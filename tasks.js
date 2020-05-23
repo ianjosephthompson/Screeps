@@ -469,7 +469,7 @@ function goBuild(creep) {
 
   const tryBuild = creep.build(constructionSite);
   if (tryBuild === OK) {
-    creep.say('👷');
+    creep.say('🚧');
   }
   else {
     let errorString;
