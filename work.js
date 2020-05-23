@@ -27,6 +27,8 @@ function work(creep) {
 
     //  if empty
     if (creep.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
+      creep.memory.task.storageTarget = undefined;
+
       if (role === ROLES.WORKER) {
         tasks.goPickupDroppedResources(creep);
       }
@@ -36,6 +38,8 @@ function work(creep) {
     }
     //  if full
     else if (creep.store.getFreeCapacity(RESOURCE_ENERGY) === 0) {
+      creep.memory.task.collectionTarget = undefined;
+
       //  if creep was collecting or pickingup last tick
       if (task === TASKS.COLLECTING || task === TASKS.PICKINGUP) {
         //  assign emptying task according to role

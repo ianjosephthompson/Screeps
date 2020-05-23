@@ -31,7 +31,11 @@ const SPAWN_LIMITS = {
 
   DEFAULT_WORKER: 6,
   DEFAULT_UPGRADER: 6,
-  DEFAULT_BUILDER: 6
+  DEFAULT_BUILDER: 6,
+
+  ADVANCED_WORKER: 10,
+  ADVANCED_UPGRADER: Infinity,
+  ADVANCED_BUILDER: 10
 };
 
 function spawnCreep(options) {
@@ -41,7 +45,7 @@ function spawnCreep(options) {
   let numUpgraderCreeps = options.numUpgraderCreeps;
   let numBuilderCreeps = options.numBuilderCreeps;
 
-  //  Maintain a few cheap creeps if population drops
+  //  Maintain a minimum of cheap creeps if the population tanks
   if (numWorkerCreeps < SPAWN_LIMITS.CHEAP_WORKER && energyAvailable >= PARTS_COST.CHEAP) {
     doSpawnCreep(spawn, ROLES.WORKER, CREEP_TYPES.CHEAP);
   }
@@ -52,7 +56,7 @@ function spawnCreep(options) {
     doSpawnCreep(spawn, ROLES.BUILDER, CREEP_TYPES.CHEAP);
   }
 
-  //  Otherwise build good creeps up to SPAWN_LIMITS
+  //  Then, build a few decent creeps to ramp back up
   else if (numWorkerCreeps < SPAWN_LIMITS.DEFAULT_WORKER && energyAvailable >= PARTS_COST.DEFAULT) {
     doSpawnCreep(spawn, ROLES.WORKER, CREEP_TYPES.DEFAULT);
   }
@@ -63,7 +67,15 @@ function spawnCreep(options) {
     doSpawnCreep(spawn, ROLES.UPGRADER, CREEP_TYPES.DEFAULT);
   }
 
-  //  Then spawn advanced workers
+  //  Otherwise, build good creeps up to SPAWN_LIMITS
+  else if (numWorkerCreeps < SPAWN_LIMITS.ADVANCED_WORKER && energyAvailable >= PARTS_COST.ADVANCED) {
+    doSpawnCreep(spawn, ROLES.WORKER, CREEP_TYPES.ADVANCED);
+  }
+  else if (numBuilderCreeps < SPAWN_LIMITS.ADVANCED_BUILDER && energyAvailable >= PARTS_COST.ADVANCED) {
+    doSpawnCreep(spawn, ROLES.BUILDER, CREEP_TYPES.ADVANCED);
+  }
+
+  //  Finally, spam advanced workers
   else if (energyAvailable >= PARTS_COST.ADVANCED) {
     doSpawnCreep(spawn, ROLES.WORKER, CREEP_TYPES.ADVANCED);
   }
@@ -101,16 +113,16 @@ function doSpawnCreep(spawn, role, type) {
 
   switch (role) {
     case ROLES.BUILDER: {
-      rolePrefix = 'Builder-';
+      rolePrefix = 'B-';
       break;
     }
     case ROLES.UPGRADER: {
-      rolePrefix = 'Upgrader-';
+      rolePrefix = 'U-';
       break;
     }
     case ROLES.WORKER:
     default: {
-      rolePrefix = 'Worker-';
+      rolePrefix = 'W-';
       break;
     }
   }

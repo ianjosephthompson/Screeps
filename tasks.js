@@ -10,7 +10,7 @@ const TASKS = {
   REPAIRING: 'repairing'
 };
 
-const MAX_WALL_REPAIR_LEVEL = 1000;
+const MAX_REPAIR_LEVEL = 2000;
 
 function goTravel(creep, destination, color) {
   let tryMove = creep.moveTo(destination, { visualizePathStyle: { stroke: color } });
@@ -60,6 +60,8 @@ function goTravel(creep, destination, color) {
       console.log('ERROR: Creep ' + creep.name + ' tried to goTravel() to ' + destination.pos + ', but ' + errorString);
     }
   }
+
+  return tryMove;
 }
 
 function goCollectEnergy(creep) {
@@ -98,7 +100,7 @@ function goCollectEnergy(creep) {
 
   const tryCollectEnergy = creep.harvest(source);
   if (tryCollectEnergy === OK) {
-    creep.say('⛏️');
+    creep.say('☀️');
   }
   else {
     let errorString;
@@ -240,7 +242,10 @@ function goStoreEnergyInExtension(creep) {
     //  use previous storage target
     let foundStorages = creep.room.find(FIND_MY_STRUCTURES, {
       filter: (structure) => {
-        return (structure.structureType === STRUCTURE_EXTENSION && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0);
+        return (
+          structure.structureType === STRUCTURE_EXTENSION &&
+          structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+        );
       }
     });
     for (let i = 0, ilen = foundStorages.length; i < ilen; i++) {
@@ -255,7 +260,10 @@ function goStoreEnergyInExtension(creep) {
   else {
     storage = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
       filter: (structure) => {
-        return structure.structureType === STRUCTURE_EXTENSION && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+        return (
+          structure.structureType === STRUCTURE_EXTENSION &&
+          structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+        );
       }
     });
   }
@@ -271,7 +279,7 @@ function goStoreEnergyInExtension(creep) {
 
   const tryStoreEnergy = creep.transfer(storage, RESOURCE_ENERGY);
   if (tryStoreEnergy === OK) {
-    creep.say('☀️');
+    creep.say('🔋');
   }
   else {
     let errorString;
@@ -284,7 +292,10 @@ function goStoreEnergyInExtension(creep) {
       case ERR_FULL: {
         let extensions = creep.room.find(FIND_MY_STRUCTURES, {
           filter: (structure) => {
-            return structure.structureType === STRUCTURE_EXTENSION && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+            return (
+              structure.structureType === STRUCTURE_EXTENSION &&
+              structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+            );
           }
         });
 
@@ -342,7 +353,7 @@ function goStoreEnergyInSpawner(creep) {
 
   const tryStoreEnergy = creep.transfer(storage, RESOURCE_ENERGY);
   if (tryStoreEnergy === OK) {
-    creep.say('☀️');
+    creep.say('🔋');
   }
   else {
     let errorString;
@@ -386,12 +397,25 @@ function goStoreEnergyInSpawner(creep) {
 };
 
 function goUpgradeController(creep) {
+  const controller = creep.room.controller;
+
   //  set task
   creep.memory.task = {
     task: TASKS.UPGRADING
   };
 
-  const controller = creep.room.controller;
+  let tryTravel;
+  //  if not yet within a range of 2
+  if (!creep.pos.inRangeTo(controller, 2)) {
+    tryTravel = goTravel(creep, controller, '#C0D461');
+
+    //  move there this tick
+    if (tryTravel === OK) {
+      return;
+    }
+  }
+
+  //  otherwise try and upgrade
   const tryUpgradeController = creep.upgradeController(controller);
   if (tryUpgradeController === OK) {
     creep.say('⚡');
@@ -441,7 +465,7 @@ function goBuild(creep) {
   };
 
   const constructionSite = creep.pos.findClosestByPath(FIND_MY_CONSTRUCTION_SITES);
-  if (constructionSite === null) {
+  if (constructionSite === null || constructionSite === undefined) {
     return goRepair(creep);
   }
 
@@ -488,7 +512,7 @@ function goBuild(creep) {
 }
 
 function goRepair(creep) {
-  goRepairStructures(creep);
+  return goRepairStructures(creep);
 }
 
 function goRepairRoadsThenWalls(creep, repairWalls) {
@@ -504,42 +528,26 @@ function goRepairRoadsThenWalls(creep, repairWalls) {
     type = '🧱';
     repairSite = creep.pos.findClosestByPath(FIND_STRUCTURES, {
       filter: (structure) => {
-        return structure.hits < MAX_WALL_REPAIR_LEVEL
+        return (
+          structure.hitsMax > 0 &&            //  is repairable
+          structure.hits < MAX_REPAIR_LEVEL   //  isn't above set repair level
+        );
       }
     });
 
     if (repairSite === undefined || repairSite === null) {
+      console.log('no wall repair sites');
       return goUpgradeController(creep);
     }
   }
   else {
     type = '🛣️';
     repairSite = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-      filter: (structure) => {
-        const structureType = structure.structureType;
-        const hitsMax = structure.hitsMax;
-        const hits = structure.hits;
-        let hitsRatio;
-        let readyToRepair = false;
-
-        if (
-          structureType !== STRUCTURE_WALL &&
-          structureType !== STRUCTURE_RAMPART &&
-          hitsMax > 0
-        ) {
-          hitsRatio = hits / hitsMax;
-
-          readyToRepair = (
-            (hitsMax <= 1000 && hitsRatio < .9) ||  //  Wait for structures with less than 1k hits to reach 90% before repairing
-            (hitsMax > 1000 && hits < 1000)         //  Only repair up to 1k hits
-          );
-        }
-
-        return readyToRepair
-      }
+      filter: filterRepairableStructures
     });
 
     if (repairSite === undefined || repairSite === null) {
+      console.log('no road repair sites');
       return goRepairRoadsThenWalls(creep, true);
     }
   }
@@ -593,14 +601,7 @@ function goRepairStructures(creep) {
   };
 
   let repairSite = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
-    filter: (structure) => {
-      let structureType = structure.structureType;
-      return (
-        structure.hits < structure.hitsMax &&
-        structureType !== STRUCTURE_WALL &&
-        structureType !== STRUCTURE_RAMPART
-      );
-    }
+    filter: filterRepairableStructures
   });
 
   if (repairSite === undefined || repairSite === null) {
@@ -647,6 +648,29 @@ function goRepairStructures(creep) {
       console.log('ERROR: Creep ' + creep.name + ' tried to goRepairStructures(), but ' + errorString);
     }
   }
+}
+
+function filterRepairableStructures(structure) {
+  const structureType = structure.structureType;
+  const hitsMax = structure.hitsMax;
+  const hits = structure.hits;
+  let hitsRatio;
+  let readyToRepair = false;
+
+  if (
+    structureType !== STRUCTURE_WALL &&
+    structureType !== STRUCTURE_RAMPART &&
+    hitsMax > 0                             //  is repairable
+  ) {
+    hitsRatio = hits / hitsMax;
+
+    readyToRepair = (
+      (hitsMax <= MAX_REPAIR_LEVEL && hitsRatio < .9) ||
+      (hitsMax > MAX_REPAIR_LEVEL && hits < MAX_REPAIR_LEVEL)
+    );
+  }
+
+  return readyToRepair;
 }
 
 module.exports = {
