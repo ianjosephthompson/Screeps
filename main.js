@@ -33,6 +33,15 @@ module.exports.loop = function () {
   numBuilderCreeps = _.sum(Game.creeps, (creep) => creep.memory.role === ROLES.BUILDER);
   numCreepsBlockedLastTick = _.sum(Game.creeps, (creep) => creep.memory.blockedLastTick === true);
 
+  let tick = Game.time;
+
+  //  Every 10 ticks, report on creeps
+  if (tick % 10 === 0) {
+    console.log(numWorkerCreeps + ' wokers, ' + numUpgraderCreeps + ' upgraders, and ' + numBuilderCreeps + ' builders.');
+  } else {
+    console.log('.');
+  }
+
   garbageCollect();
   spawnCreeps();
   creepsDoWork();
