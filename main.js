@@ -5,16 +5,8 @@ const roles = require('roles');
 const work = require('work');
 const spawner = require('spawner');
 
+//  CONSTS
 const ROLES = roles.ROLES;
-
-// // Any modules that modify the game's prototypes should be required before the profiler.
-// const profiler = require('screeps-profiler');
-// profiler.enable();
-// module.exports.loop = function () {
-//   profiler.wrap(function () {
-//     // Main.js logic should go here.
-//   });
-// }
 
 //  Loop variables
 let spawn;
@@ -45,6 +37,7 @@ module.exports.loop = function () {
   garbageCollect();
   spawnCreeps();
   creepsDoWork();
+  checkForBlockedCreeps();
 };
 
 function garbageCollect() {
@@ -72,5 +65,15 @@ function creepsDoWork() {
     const creep = Game.creeps[name];
 
     work.work(creep);
+  }
+}
+
+function checkForBlockedCreeps() {
+  for (let name in Game.creeps) {
+    const creep = Game.creeps[name];
+
+    if (creep.memory.blockedLastTick === true) {
+      creep.say('🛑');
+    }
   }
 }

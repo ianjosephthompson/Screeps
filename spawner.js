@@ -39,11 +39,11 @@ const SPAWN_LIMITS = {
 };
 
 function spawnCreep(options) {
-  let spawn = options.spawn;
-  let energyAvailable = options.energyAvailable;
-  let numWorkerCreeps = options.numWorkerCreeps;
-  let numUpgraderCreeps = options.numUpgraderCreeps;
-  let numBuilderCreeps = options.numBuilderCreeps;
+  const spawn = options.spawn;
+  const energyAvailable = options.energyAvailable;
+  const numWorkerCreeps = options.numWorkerCreeps;
+  const numUpgraderCreeps = options.numUpgraderCreeps;
+  const numBuilderCreeps = options.numBuilderCreeps;
 
   //  Maintain a minimum of cheap creeps if the population tanks
   if (numWorkerCreeps < SPAWN_LIMITS.CHEAP_WORKER && energyAvailable >= PARTS_COST.CHEAP) {
@@ -85,7 +85,7 @@ function doSpawnCreep(spawn, role, type) {
   let parts;
   let typePrefix;
   let rolePrefix;
-  let memory = {
+  const memory = {
     role: role,
     task: {
       task: TASKS.SPAWNING

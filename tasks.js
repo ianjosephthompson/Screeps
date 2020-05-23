@@ -13,7 +13,7 @@ const TASKS = {
 const MAX_REPAIR_LEVEL = 2000;
 
 function goTravel(creep, destination, color) {
-  let tryMove = creep.moveTo(destination, { visualizePathStyle: { stroke: color } });
+  const tryMove = creep.moveTo(destination, { visualizePathStyle: { stroke: color } });
 
   if (tryMove !== OK) {
     let errorString;
@@ -65,7 +65,7 @@ function goTravel(creep, destination, color) {
 }
 
 function goCollectEnergy(creep) {
-  let task = creep.memory.task;
+  const task = creep.memory.task;
   let source;
 
   //  set task
@@ -74,9 +74,9 @@ function goCollectEnergy(creep) {
   //  if previously collecting
   if (task.collectionTarget) {
     //  use previous source
-    let foundSources = creep.room.find(FIND_SOURCES);
+    const foundSources = creep.room.find(FIND_SOURCES);
     for (let i = 0, ilen = foundSources.length; i < ilen; i++) {
-      let foundSource = foundSources[i];
+      const foundSource = foundSources[i];
       if (foundSource.id === task.collectionTarget) {
         source = foundSource;
         break;
@@ -108,7 +108,7 @@ function goCollectEnergy(creep) {
     switch (tryCollectEnergy) {
       //  Actionable errors
       case ERR_NOT_ENOUGH_RESOURCES: {
-        let sources = creep.room.find(FIND_SOURCES_ACTIVE);
+        const sources = creep.room.find(FIND_SOURCES_ACTIVE);
 
         for (let otherSource in sources) {
           if (otherSource.id !== source.id) {
@@ -164,7 +164,7 @@ function goPickupDroppedResources(creep) {
     task: TASKS.PICKINGUP
   };
 
-  let pickup = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES);
+  const pickup = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES);
   if (pickup === undefined || pickup === null) {
     return goStoreEnergy(creep);
   }
@@ -209,8 +209,8 @@ function goPickupDroppedResources(creep) {
 
 function goStoreEnergy(creep) {
   const spawn = Game.spawns['CreepFactory'];
-  let task = creep.memory.task;
-  let storageTarget = task.storageTarget;
+  const task = creep.memory.task;
+  const storageTarget = task.storageTarget;
 
   if (storageTarget === undefined || storageTarget === null) {
     goStoreEnergyInExtension(creep);
@@ -226,8 +226,8 @@ function goStoreEnergy(creep) {
 }
 
 function goStoreEnergyInExtension(creep) {
-  let task = creep.memory.task;
-  let storageTarget = task.storageTarget;
+  const task = creep.memory.task;
+  const storageTarget = task.storageTarget;
   let storage;
 
   //  set task
@@ -236,7 +236,7 @@ function goStoreEnergyInExtension(creep) {
   //  if previously storing
   if (storageTarget !== undefined && storageTarget !== null) {
     //  use previous storage target
-    let foundStorages = creep.room.find(FIND_MY_STRUCTURES, {
+    const foundStorages = creep.room.find(FIND_MY_STRUCTURES, {
       filter: (structure) => {
         return (
           structure.structureType === STRUCTURE_EXTENSION &&
@@ -245,7 +245,7 @@ function goStoreEnergyInExtension(creep) {
       }
     });
     for (let i = 0, ilen = foundStorages.length; i < ilen; i++) {
-      let foundStorage = foundStorages[i];
+      const foundStorage = foundStorages[i];
       if (foundStorage.id === task.storageTarget) {
         storage = foundStorage;
         break;
@@ -287,7 +287,7 @@ function goStoreEnergyInExtension(creep) {
         return;
       }
       case ERR_FULL: {
-        let extensions = creep.room.find(FIND_MY_STRUCTURES, {
+        const extensions = creep.room.find(FIND_MY_STRUCTURES, {
           filter: (structure) => {
             return (
               structure.structureType === STRUCTURE_EXTENSION &&
@@ -340,7 +340,6 @@ function goStoreEnergyInExtension(creep) {
 
 function goStoreEnergyInSpawner(creep) {
   const spawn = Game.spawns['CreepFactory'];
-  let storage = spawn;
 
   //  set task
   creep.memory.task.task = TASKS.STORING;
@@ -348,7 +347,7 @@ function goStoreEnergyInSpawner(creep) {
   //  remember target
   creep.memory.task.storageTarget = storageTarget = storage.id;
 
-  const tryStoreEnergy = creep.transfer(storage, RESOURCE_ENERGY);
+  const tryStoreEnergy = creep.transfer(spawn, RESOURCE_ENERGY);
   if (tryStoreEnergy === OK) {
     creep.say('🔋');
   }
@@ -365,7 +364,7 @@ function goStoreEnergyInSpawner(creep) {
         return goUpgradeController(creep);
       }
       case ERR_NOT_IN_RANGE: {
-        return goTravel(creep, storage, '#66A182');
+        return goTravel(creep, spawn, '#66A182');
       }
 
       //  Uncommon errors
@@ -591,7 +590,7 @@ function goRepairStructures(creep) {
     task: TASKS.REPAIRING
   };
 
-  let repairSite = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
+  const repairSite = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
     filter: filterRepairableStructures
   });
 
