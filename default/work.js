@@ -33,8 +33,11 @@ function work(creep) {
 
     // console.log(creep.name + ' is ' + task + ' with capactiy ' + creep.store.getFreeCapacity(RESOURCE_ENERGY));
 
+    if (role === ROLES.DEFENDER) {
+      tasks.goAttack(creep);
+    }
     //  if empty
-    if (creep.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
+    else if (creep.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
       creep.memory.task.storageTarget = undefined;
 
       if (role === ROLES.WORKER) {

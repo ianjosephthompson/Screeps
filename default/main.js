@@ -12,16 +12,18 @@ const ROLES = roles.ROLES;
 //  Loop variables
 let spawn;
 let numCreeps;
-let numCreepsBlockedLastTick;
+let numDefenderCreeps;
 let numWorkerCreeps;
 let numUpgraderCreeps;
 let numBuilderCreeps;
+let numCreepsBlockedLastTick;
 
 //  MAIN LOOP
 prototypes.apply();
 module.exports.loop = function () {
   spawn = Game.spawns['CreepFactory'];
   numCreeps = _.sum(Game.creeps, () => true);
+  numDefenderCreeps = _.sum(Game.creeps, (creep) => creep.memory.role === ROLES.DEFENDER);
   numWorkerCreeps = _.sum(Game.creeps, (creep) => creep.memory.role === ROLES.WORKER);
   numUpgraderCreeps = _.sum(Game.creeps, (creep) => creep.memory.role === ROLES.UPGRADER);
   numBuilderCreeps = _.sum(Game.creeps, (creep) => creep.memory.role === ROLES.BUILDER);
@@ -44,7 +46,7 @@ module.exports.loop = function () {
 
   //  Every 10 ticks, report on creeps
   if (tick % 10 === 0) {
-    console.log(numWorkerCreeps + ' wokers, ' + numUpgraderCreeps + ' upgraders, and ' + numBuilderCreeps + ' builders.');
+    console.log(numDefenderCreeps + ' defenders, ' + numWorkerCreeps + ' wokers, ' + numUpgraderCreeps + ' upgraders, and ' + numBuilderCreeps + ' builders.');
   } else {
     console.log('.');
   }
@@ -68,6 +70,7 @@ function spawnCreeps() {
     spawn: spawn,
     energyAvailable: spawn.room.energyAvailable,
     numCreeps: numCreeps,
+    numDefenderCreeps: numDefenderCreeps,
     numWorkerCreeps: numWorkerCreeps,
     numUpgraderCreeps: numUpgraderCreeps,
     numBuilderCreeps: numBuilderCreeps,

@@ -640,6 +640,35 @@ function goRepairStructures(creep) {
   }
 }
 
+function goAttack(creep) {
+  const enemies = creep.room.find(FIND_HOSTILE_CREEPS);
+
+  if (enemies.length > 0) {
+    const enemy = enemies[0];
+
+    const tryAttack = creep.attack(enemy);
+    if (tryAttack === OK) {
+      creep.say('⚔️');
+    }
+    else {
+      let errorString;
+
+      switch (tryAttack) {
+        case ERR_NOT_IN_RANGE: {
+          return goTravel(creep, enemy.pos, '#a13913');
+        }
+        case ERR_NO_BODYPART: {
+          return creep.suicide();
+        }
+      }
+    }
+  }
+  else {
+    //  hang
+    creep.moveTo(13, 16);
+  }
+}
+
 function filterRepairableStructures(structure) {
   const structureType = structure.structureType;
   const hitsMax = structure.hitsMax;
@@ -662,6 +691,7 @@ function filterRepairableStructures(structure) {
 
   return readyToRepair;
 }
+
 function filterRepairableWalls(structure) {
   const structureType = structure.structureType;
   const hitsMax = structure.hitsMax;
@@ -692,5 +722,6 @@ module.exports = {
   goStoreEnergy: goStoreEnergy,
   goUpgradeController: goUpgradeController,
   goBuild: goBuild,
-  goRepair: goRepair
+  goRepair: goRepair,
+  goAttack: goAttack
 };
