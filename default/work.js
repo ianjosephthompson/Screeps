@@ -42,6 +42,7 @@ function work(creep) {
 
       if (role === ROLES.WORKER) {
         tasks.goPickupDroppedResources(creep);
+        // tasks.goCollectEnergyFromTombstones(creep);
       }
       else {
         tasks.goCollectEnergy(creep);
@@ -93,11 +94,13 @@ function work(creep) {
         }
         else if (task === TASKS.PICKINGUP) {
           tasks.goPickupDroppedResources(creep);
+          // tasks.goCollectEnergyFromTombstones(creep);
         }
         else {
           //  collect according to role
           if (role === ROLES.WORKER) {
             tasks.goPickupDroppedResources(creep);
+            // tasks.goCollectEnergyFromTombstones(creep);
           }
           else {
             tasks.goCollectEnergy(creep);

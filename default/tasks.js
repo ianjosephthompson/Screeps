@@ -156,7 +156,7 @@ function goCollectEnergy(creep) {
       console.log('ERROR: Creep ' + creep.name + ' tried to goCollectEnergy(), but ' + errorString);
     }
   }
-};
+}
 
 function goPickupDroppedResources(creep) {
   //  set task
@@ -203,6 +203,55 @@ function goPickupDroppedResources(creep) {
 
     if (errorString) {
       console.log('ERROR: Creep ' + creep.name + ' tried to goPickupDroppedResources(), but ' + errorString);
+    }
+  }
+}
+
+function goCollectEnergyFromTombstones(creep) {
+  //  set task
+  creep.memory.task = {
+    task: TASKS.PICKINGUP
+  };
+
+  const tombstone = creep.pos.findClosestByPath(FIND_TOMBSTONES);
+  if (tombstone === undefined || tombstone === null) {
+    return goCollectEnergy(creep);
+  }
+
+  const tryWithdraw = creep.withdraw(tombstone, RESOURCE_ENERGY);
+  if (tryWithdraw === OK) {
+    creep.say('🗑️');
+  }
+  else {
+    let errorString;
+
+    switch (tryWithdraw) {
+      //  Actionable errors
+      case ERR_FULL: {
+        return goStoreEnergy(creep);
+      }
+      case ERR_NOT_IN_RANGE: {
+        return goTravel(creep, tombstone, '#C0D461');
+      }
+
+      //  Uncommon errors
+      case ERR_NOT_OWNER: {
+        errorString = 'ERR_NOT_OWNER';
+        break;
+      }
+      case ERR_BUSY: {
+        errorString = 'ERR_BUSY';
+        break;
+      }
+      case ERR_INVALID_TARGET: {
+        errorString = 'ERR_INVALID_TARGET';
+        creep.memory.blockedLastTick = true;
+        break;
+      }
+    }
+
+    if (errorString) {
+      console.log('ERROR: Creep ' + creep.name + ' tried to goCollectEnergyFromTombstones(), but ' + errorString);
     }
   }
 }
@@ -719,6 +768,7 @@ module.exports = {
   goTravel: goTravel,
   goCollectEnergy: goCollectEnergy,
   goPickupDroppedResources: goPickupDroppedResources,
+  goCollectEnergyFromTombstones: goCollectEnergyFromTombstones,
   goStoreEnergy: goStoreEnergy,
   goUpgradeController: goUpgradeController,
   goBuild: goBuild,
