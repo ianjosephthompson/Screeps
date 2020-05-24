@@ -1,17 +1,18 @@
-const prototypeOverrides = {
-  Creep: require('prototype.Creep')
+const overrides = {
+  Creep: require('overrides.Creep')
 };
 
 function apply() {
   let topLevelObject;
 
-  for (let objectName in prototypeOverrides) {
+  for (let objectName in overrides) {
     topLevelObject = global[objectName];
 
     if (topLevelObject) {
-      for (let propertyName in prototypeOverrides[objectName]) {
+      for (let propertyName in overrides[objectName]) {
         if (!topLevelObject.prototype['_' + propertyName]) {
-          topLevelObject.prototype['_' + propertyName] = prototypeOverrides[objectName][propertyName];
+          topLevelObject.prototype['_' + propertyName] = topLevelObject.prototype[propertyName];
+          topLevelObject.prototype[propertyName] = overrides[objectName][propertyName];
         }
       }
     }

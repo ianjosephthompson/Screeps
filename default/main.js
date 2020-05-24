@@ -1,7 +1,7 @@
 //  Copyright © 2020 Ian Joseph Thompson
 
 //  Modules
-const prototypes = require('prototypes');
+const overrides = require('overrides');
 const roles = require('roles');
 const work = require('work');
 const spawner = require('spawner');
@@ -18,8 +18,10 @@ let numUpgraderCreeps;
 let numBuilderCreeps;
 let numCreepsBlockedLastTick;
 
+//  Apply prototype overrides
+overrides.apply();
+
 //  MAIN LOOP
-prototypes.apply();
 module.exports.loop = function () {
   spawn = Game.spawns['CreepFactory'];
   numCreeps = _.sum(Game.creeps, () => true);
@@ -46,7 +48,7 @@ module.exports.loop = function () {
 
   //  Every 10 ticks, report on creeps
   if (tick % 10 === 0) {
-    console.log(numDefenderCreeps + ' defenders, ' + numWorkerCreeps + ' wokers, ' + numUpgraderCreeps + ' upgraders, and ' + numBuilderCreeps + ' builders.');
+    console.log(numDefenderCreeps + ' defenders, ' + numWorkerCreeps + ' workers, ' + numUpgraderCreeps + ' upgraders, and ' + numBuilderCreeps + ' builders.');
   } else {
     console.log('.');
   }
