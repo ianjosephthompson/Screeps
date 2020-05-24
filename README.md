@@ -71,16 +71,18 @@ https://github.com/danielheyman/screeps-discord
 ## Integrating Git
 
   * After you've been playing for awhile, maybe you realize it would be nice to have some source control!
-  * From GitHub (or elsewhere) setup a new repository
-  * From a terminal:
-    * cd /to/your/screeps.com/ folder
-      * For me on Windows10 this was: <My Drive>:\<My Windows Installation>\Users\<<My User>\AppData\Local\Screeps\scripts\screeps<span>.</span>com\
-    * Clone your new repository here and name it something descriptive like "screeps-git"
-  * Now copy all your scripts from the /default/ folder into your cloned repository
-  * Commit, push your changes, and verify they are on the git server
-    * Now your code is safe!
-  * So you can safely delete the /default/ folder
-    * And clone a new copy of your repository, but named as /default/
+  * FSetup a new repository and create a directory called "default"
+  * Find your local scripts folder by clicking "Open local folder" in the bottom-left
+    * For me on Windows10 this was: <My Drive>:\<My Windows Installation>\Users\<<My User>\AppData\Local\Screeps\scripts\screeps<span>.</span>com\default\
+  * Copy all your scripts to the "default" folder in your repository
+  * Commit yoru code to source control
+  * Close Screeps, your IDE, and any terminal windows you used for source control
+  * From a new terminal window create a symlink between your repository's "default" folder and the Screeps local scripts folder's "default" folder:
+    * on Windows run:
+      * mklink /J "path/to/screeps/local/scripts/folder/default" "path/to/repository/default"
+    * on Linux run:
+      * ln -s "path/to/repository/default" "path/to/screeps/local/scripts/folder/default"
+  * Now, your scripts in your repository will be linked into the folder Screeps expects
 
 
 ## Setup Visual Studio: Code for Screeps Development
