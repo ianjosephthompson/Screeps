@@ -38,7 +38,7 @@ const SPAWN_LIMITS = {
   DEFAULT_BUILDER: 2,
 
   ADVANCED_WORKER: 6,
-  ADVANCED_UPGRADER: Infinity,
+  ADVANCED_UPGRADER: 10,
   ADVANCED_BUILDER: 4
 };
 
@@ -89,10 +89,8 @@ function spawnCreep(options) {
       else if (numBuilderCreeps < SPAWN_LIMITS.ADVANCED_BUILDER && energyAvailable >= PARTS_COST.ADVANCED) {
         doSpawnCreep(spawn, ROLES.BUILDER, CREEP_TYPES.ADVANCED);
       }
-
-      //  Finally, spam advanced workers
-      else if (energyAvailable >= PARTS_COST.ADVANCED) {
-        doSpawnCreep(spawn, ROLES.WORKER, CREEP_TYPES.ADVANCED);
+      else if (numUpgraderCreeps < SPAWN_LIMITS.ADVANCED_UPGRADER && energyAvailable >= PARTS_COST.ADVANCED) {
+        doSpawnCreep(spawn, ROLES.UPGRADER, CREEP_TYPES.ADVANCED);
       }
     }
   }
