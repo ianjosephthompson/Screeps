@@ -3,6 +3,8 @@
 const errors = require('errors');
 
 function logError(methodName, errorCode, message) {
+  this.say('❌');
+
   console.log('ERROR: Creep ' + this.name + ' tried to ' + methodName + ', but ' + errors.getErrorString(errorCode));
 
   if (message) {

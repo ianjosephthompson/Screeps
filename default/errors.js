@@ -28,7 +28,7 @@ function getErrorString(errorCode) {
   return errorString;
 }
 
-module.export = {
+module.exports = {
   ERROR_STRINGS: ERROR_STRINGS,
   getErrorString: getErrorString
 };
