@@ -5,7 +5,7 @@ const errors = require('errors');
 
 function creepSuicide() {
   this.say('😔🔫');
-  const trySuicide = this._suicide(args);
+  const trySuicide = this._suicide(arguments);
   switch (trySuicide) {
     //  actionable results
     case OK: {
@@ -46,7 +46,7 @@ function apply() {
     if (globalObject) {
       for (let propertyName in overrides[objectName]) {
         if (!globalObject.prototype['_' + propertyName]) {
-          globalObject.prototype[propertyName] = overrides[objectName][propertyName];
+          globalObject.prototype['_' + propertyName] = overrides[objectName][propertyName];
         }
       }
     }
