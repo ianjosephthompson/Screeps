@@ -1,3 +1,5 @@
+//  Copyright © 2020 Ian Joseph Thompson
+
 const overrides = {
   Creep: require('overrides.Creep')
 };

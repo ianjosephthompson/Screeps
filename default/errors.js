@@ -1,3 +1,6 @@
+//  Copyright © 2020 Ian Joseph Thompson
+
+//  Constants
 const ERROR_STRINGS = {
   '-1': 'not owner',
   '-2': 'no path',

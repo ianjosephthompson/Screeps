@@ -2,6 +2,7 @@
 
 //  Modules
 const overrides = require('overrides');
+const prototypes = require('prototypes');
 const roles = require('roles');
 const work = require('work');
 const spawner = require('spawner');
@@ -20,6 +21,7 @@ let numCreepsBlockedLastTick;
 
 //  Apply prototype overrides
 overrides.apply();
+prototypes.apply();
 
 //  MAIN LOOP
 module.exports.loop = function () {
