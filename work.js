@@ -27,9 +27,9 @@ function work(creep) {
 
   //  only spawned creeps can work
   if (!creep.spawning) {
-    let creepMemory = creep.memory;
-    let role = creepMemory.role;
-    let task = creepMemory.task.task;
+    const creepMemory = creep.memory;
+    const role = creepMemory.role;
+    const task = creepMemory.task.task;
 
     // console.log(creep.name + ' is ' + task + ' with capactiy ' + creep.store.getFreeCapacity(RESOURCE_ENERGY));
 

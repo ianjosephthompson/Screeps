@@ -1,11 +1,12 @@
 //  Copyright © 2020 Ian Joseph Thompson
 
 //  Modules
+const prototypes = require('prototypes');
 const roles = require('roles');
 const work = require('work');
 const spawner = require('spawner');
 
-//  CONSTS
+//  Constants
 const ROLES = roles.ROLES;
 
 //  Loop variables
@@ -17,6 +18,7 @@ let numUpgraderCreeps;
 let numBuilderCreeps;
 
 //  MAIN LOOP
+prototypes.apply();
 module.exports.loop = function () {
   spawn = Game.spawns['CreepFactory'];
   numCreeps = _.sum(Game.creeps, () => true);
@@ -24,6 +26,19 @@ module.exports.loop = function () {
   numUpgraderCreeps = _.sum(Game.creeps, (creep) => creep.memory.role === ROLES.UPGRADER);
   numBuilderCreeps = _.sum(Game.creeps, (creep) => creep.memory.role === ROLES.BUILDER);
   numCreepsBlockedLastTick = _.sum(Game.creeps, (creep) => creep.memory.blockedLastTick === true);
+
+  //  TODO
+  //  find all rooms
+  //  for each room
+  //    find all assigned constructs
+  //    for each assigned constructs
+  //      if construct is not built
+  //        assign construction site
+  //    find all assigned creeps
+  //    for each assigned creep
+  //      do work
+  //  find all non-assigned creeps
+  //    do work
 
   let tick = Game.time;
 
