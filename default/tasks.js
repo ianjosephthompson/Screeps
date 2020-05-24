@@ -713,8 +713,8 @@ function goAttack(creep) {
     }
   }
   else {
-    //  hang
-    creep.moveTo(13, 16);
+    //  hang off road
+    creep.moveTo(14, 16);
   }
 }
 
