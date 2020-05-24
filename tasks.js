@@ -1,5 +1,7 @@
 //  Copyright © 2020 Ian Joseph Thompson
 
+//  Constants
+const MAX_REPAIR_LEVEL = 2000;
 const TASKS = {
   SPAWNING: 'spawning',
   COLLECTING: 'collecting',
@@ -9,8 +11,6 @@ const TASKS = {
   BUILDING: 'building',
   REPAIRING: 'repairing'
 };
-
-const MAX_REPAIR_LEVEL = 2000;
 
 function goTravel(creep, destination, color) {
   const tryMove = creep.moveTo(destination, { visualizePathStyle: { stroke: color } });
@@ -95,7 +95,7 @@ function goCollectEnergy(creep) {
     //  no active sources to collect energy from
     creep.memory.task.collectionTarget = undefined;
     creep.memory.blockedLastTick = true;
-    return goPickupDroppedResources(creep);
+    return goStoreEnergy(creep);
   }
 
   const tryCollectEnergy = creep.harvest(source);
@@ -166,7 +166,7 @@ function goPickupDroppedResources(creep) {
 
   const pickup = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES);
   if (pickup === undefined || pickup === null) {
-    return goStoreEnergy(creep);
+    return goCollectEnergy(creep);
   }
 
   const tryPickup = creep.pickup(pickup);
@@ -270,7 +270,7 @@ function goStoreEnergyInExtension(creep) {
   }
   else {
     //  remember target
-    creep.memory.task.storageTarget = storageTarget = storage.id;
+    creep.memory.task.storageTarget = storage.id;
   }
 
   const tryStoreEnergy = creep.transfer(storage, RESOURCE_ENERGY);
@@ -342,10 +342,10 @@ function goStoreEnergyInSpawner(creep) {
   const spawn = Game.spawns['CreepFactory'];
 
   //  set task
-  creep.memory.task.task = TASKS.STORING;
-
-  //  remember target
-  creep.memory.task.storageTarget = storageTarget = storage.id;
+  creep.memory.task = {
+    task: TASKS.STORING,
+    storageTarget: spawn.id
+  };
 
   const tryStoreEnergy = creep.transfer(spawn, RESOURCE_ENERGY);
   if (tryStoreEnergy === OK) {

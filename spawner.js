@@ -1,29 +1,27 @@
 //  Copyright © 2020 Ian Joseph Thompson
 
+//  Modules
 const roles = require('roles');
 const tasks = require('tasks');
 
+//  Constants
 const ROLES = roles.ROLES;
 const TASKS = tasks.TASKS;
-
 const CREEP_TYPES = {
   CHEAP: 'cheap',
   DEFAULT: 'default',
   ADVANCED: 'advanced'
 };
-
 const PARTS = {
   CHEAP: [WORK, CARRY, MOVE],
   DEFAULT: [WORK, WORK, CARRY, MOVE, MOVE, MOVE],
   ADVANCED: [WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE]
 };
-
 const PARTS_COST = {
   CHEAP: 200,
   DEFAULT: 400,
   ADVANCED: 650
 };
-
 const SPAWN_LIMITS = {
   CHEAP_WORKER: 3,
   CHEAP_UPGRADER: 1,
@@ -147,11 +145,12 @@ function trySpawnCreep(spawn, namePrefix, parts, memory, index) {
       case ERR_NAME_EXISTS: {
         return trySpawnCreep(spawn, namePrefix, parts, memory, index + 1);
       }
-      case ERR_NOT_ENOUGH_ENERGY: {
-        return null;
-      }
 
       //  Uncommon errors
+      case ERR_NOT_ENOUGH_ENERGY: {
+        errorString = 'ERR_NOT_ENOUGH_ENERGY';
+        break;
+      }
       case ERR_NOT_OWNER: {
         errorString = 'ERR_NOT_OWNER';
         break;

@@ -1,12 +1,20 @@
 //  Copyright © 2020 Ian Joseph Thompson
 
+//  Modules
 const roles = require('roles');
 const tasks = require('tasks');
 
+//  Constants
 const ROLES = roles.ROLES;
 const TASKS = tasks.TASKS;
 
 function work(creep) {
+  //  let the dying rest
+  if (creep.ticksToLive <= 1) {
+    creep.say('💀');
+    return;
+  }
+
   //  reset
   creep.memory.blockedLastTick = false;
 
